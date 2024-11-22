@@ -1,0 +1,38 @@
+import streamlit as st
+import random
+
+# Function to start the guessing game
+def guess_number():
+    # Generate a random number between 1 and 100
+    number_to_guess = random.randint(1, 100)
+
+    st.title("Number Guessing Game")
+    st.write("I am thinking of a number between 1 and 100.")
+    
+    # Session state to store the attempts and if the game is over
+    if 'attempts' not in st.session_state:
+        st.session_state.attempts = 0
+        st.session_state.game_over = False
+    
+    if not st.session_state.game_over:
+        # Take user input
+        user_guess = st.number_input("Enter your guess", min_value=1, max_value=100, step=1)
+        
+        if st.button('Guess'):
+            st.session_state.attempts += 1
+            
+            if user_guess < number_to_guess:
+                st.write("Too low! Try again.")
+            elif user_guess > number_to_guess:
+                st.write("Too high! Try again.")
+            else:
+                st.write(f"Congratulations! You guessed the correct number {number_to_guess} in {st.session_state.attempts} attempts.")
+                st.session_state.game_over = True
+    else:
+        if st.button('Play Again'):
+            st.session_state.attempts = 0
+            st.session_state.game_over = False
+            guess_number()
+
+# Run the game
+guess_number()
